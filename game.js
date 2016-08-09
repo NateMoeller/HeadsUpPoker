@@ -11,7 +11,6 @@ var Game = function(gameid){
 	this.cards = [];
 	this.currentCard = 0;
 	this.deck = new Deck(1);
-	this.deck.shuffle();
 
 
 }
@@ -55,7 +54,7 @@ Game.prototype.showFlop = function(){
 }
 
 
-Game.prototype.dealPlayer1 = function(){
+Game.prototype.showPlayer1 = function(){
   //update player1 cards
   $(".player").html("");
   //show the player's cards
@@ -64,7 +63,7 @@ Game.prototype.dealPlayer1 = function(){
     $(".player").append("<img src='" + path + ".png'>" + " ");
   }
 }
-Game.prototype.dealPlayer2 = function(){
+Game.prototype.showPlayer2 = function(){
   //update player1 cards
   $(".player").html("");
   //show the player's cards
@@ -110,16 +109,15 @@ var Deck = function(numberOfDecks){
       spot++;
     }
   }
-
-  this.shuffle = function(){
-    for (var i = 0; i < this.cards.length; ++i){
-          var randomSpot = i + Math.floor(Math.random() * (52 - i));
-          var temp = this.cards[i];
-          this.cards[i] = this.cards[randomSpot];
-          this.cards[randomSpot] = temp;
-      }
-  }
-
+  this.shuffle();
+}
+Deck.prototype.shuffle = function(){
+	for (var i = 0; i < this.cards.length; ++i){
+      var randomSpot = i + Math.floor(Math.random() * (52 - i));
+      var temp = this.cards[i];
+      this.cards[i] = this.cards[randomSpot];
+      this.cards[randomSpot] = temp;
+  	}
 }
 
 var Player = function(dealer){
@@ -133,8 +131,5 @@ var Player = function(dealer){
 	else{
 		this.bigBlind = true;
 		this.smallBlind = false;
-	}
-	 
-	
-
+	}	 	
 }

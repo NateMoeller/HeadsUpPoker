@@ -150,11 +150,11 @@ pubnub.subscribe({
         
         // SHOW THE STATE OF THE GAME TO THE PLAYERS
         if(player1 == me){
-          game.dealPlayer1();
+          game.showPlayer1();
           game.player1UI();
         }
         if(player2 == me){
-          game.dealPlayer2();
+          game.showPlayer2();
           game.player2UI();
         }
         game.dealOpponent();
@@ -195,6 +195,7 @@ pubnub.subscribe({
           $("#call").hide();
         }
         else if(data.payload.action == "call"){
+          // OTHER PLAYER CALLED
           var amount = parseInt(data.payload.amount);
           // Log action in chat
           var $line = $('<li class="list-group-item"><strong>Game: </strong> </span>');
@@ -228,6 +229,44 @@ pubnub.subscribe({
           else{
             // HAND OVER
           }
+        }
+        else{
+          // OTHER PLAYER FOLDED
+
+          // reset the cards
+          game.cards = [];
+
+          // reset each player's cards
+          game.player1.hand = [];
+          game.player2.hand = [];
+
+
+          if(me == player1){
+            game.showPlayer1();
+            game.player1.money += game.curPot;
+            game.player1UI();
+          }
+          else{
+            game.showPlayer2();
+            game.player2.money += game.curPot;
+            game.player2UI();
+          }
+
+          // reset the pot
+          game.curPot = 0;
+          game.currentPot();
+
+          // reset the current card
+          game.currentCard = 0;
+          game.deck = new Deck(1);
+
+          $(".opponent").html("");
+
+          // Log action in chat
+          var $line = $('<li class="list-group-item"><strong>Game: </strong> </span>');
+          var $message = $('<span class="text" />').text(opponent + " folded").html();
+          $line.append($message);
+          $('#chat-output').append($line);
         }
         
       }
@@ -289,6 +328,7 @@ $('#challenge-match').click(function(){
   $('#myModal').modal('toggle');
 });
 
+// CALL
 $('#call').click(function(){
   // UPDATE GAME STATE
   var target;
@@ -324,6 +364,59 @@ $('#call').click(function(){
       payload: {
         action: 'call',
         amount: this.value,
+        uuid: gameid,
+        target: target 
+      }
+    }
+  });
+});
+
+// FOLD
+$('#fold').click(function(){
+  var target;
+  //reset the cards
+  game.cards = [];
+
+  // reset each player's cards
+  game.player1.hand = [];
+  game.player2.hand = [];
+
+  // reset the current card
+  game.currentCard = 0;
+  game.deck = new Deck(1);
+  // TODO: swap blinds and dealer chip
+
+  if(me == player1){
+    game.showPlayer1();
+    game.player1UI();
+    game.player2.money += game.curPot;
+    target = player2;
+  }
+  else if(me == player2){
+    game.showPlayer2();
+    game.player2UI();
+    game.player1.money += game.curPot;
+    target = player1;
+  }
+  // reset the pot
+  game.curPot = 0;
+  game.currentPot();
+  $(".opponent").html("");
+
+  // Log action in chat
+  var $line = $('<li class="list-group-item"><strong>Game: </strong> </span>');
+  var $message = $('<span class="text" />').text(me + " folded").html();
+  $line.append($message);
+  $('#chat-output').append($line);
+
+
+  //SEND FOLDING MESSAGE
+  pubnub.publish({
+    channel: channel,
+    message: {
+      type: 'game',
+      payload: {
+        action: 'fold',
         uuid: gameid,
         target: target 
       }
