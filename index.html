@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <script src="//cdn.pubnub.com/pubnub.min.js"></script>
+  <title>Heads Up Poker</title>
+  <style>
+    #online-users .list-group-item {
+      cursor: pointer;
+      user-select: none;
+    }
+    #online-users .list-group-item:hover {
+      text-decoration: underline;
+    }
+    .game{
+      border:2px solid black;
+      width:100%;
+      background-image: url("img/table.jpg");
+      background-position: 50% 0%;
+      
+      background-repeat: no-repeat;
+      height:425px;
+      display:none;
+    }
+    .opponent{
+      width:20%;
+      height:100px;
+      margin: 0 auto;
+      border:2px solid yellow;
+    }
+    .cards{
+      width:45%;
+      margin: 0 auto;
+      border:2px solid red;
+      height:100px;
+    }
+    .player{
+      width:20%;
+      margin: 0 auto;
+      border:2px solid blue;
+      height:100px;
+    }
+    .chips{
+      width:10%;
+      height:30px;
+      border:2px solid red;
+      margin:0 auto;
+    }
+    .buttons{
+      border:2px solid green;
+      margin:0 auto;
+      width:30%;
+      visibility: hidden;
+    }
+    .info{
+      border:2px solid purple;
+      margin:0 auto;
+      width: 10%;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <nav class="navbar navbar-default" role="navigation">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand">Heads Up Poker</a>
+            </div>
+            <div class="navbar-form navbar-left">
+              <button type="submit" class="btn btn-default" id="challenge-match">Challenge</button>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+              <li>
+                <li>
+                  <a href="#">
+                    You are <strong id="whoami"></strong>
+                    <span id="my_skill" class="badge"></span> 
+                  </a>
+                </li>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+          <div class="game">
+            <div class="opponent"></div>
+            <div class="cards"></div>
+            <div class="player"></div>
+            <div class="chips"></div>
+            <div class="buttons">
+              <button class="btn btn-primary active" id="fold">Fold</button>
+              <button class="btn btn-primary active" id="check">Check</button>
+              <button class="btn btn-primary active" id="call">Call</button>
+              <button class="btn btn-primary active" id="raise">Raise</button>
+            </div>
+            <div class="info">
+              <div class="money">Money: </div>
+              <div class="pot">Current Pot: </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">Live Chat</div>
+            <ul class="list-group" id="chat-output"></ul>
+            <div class="panel-body">
+              <form id="chat">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="chat-input" />
+                  <span class="input-group-btn">
+                    <button type="submit" class="btn btn-default">Send Message</button>
+                  </span>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    
+
+
+  </div>
+  
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Select Player</h4>
+      </div>
+      <div class="modal-body">
+        <div class="panel panel-default">
+          <div class="panel-heading">Online Users</div>
+          <div class="list-group" id="online-users"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="app.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
