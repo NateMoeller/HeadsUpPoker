@@ -130,7 +130,7 @@ pubnub.subscribe({
         game.deal();
         var target;
         // TAKE CARE OF BLINDS
-        if(game.player1.dealer){
+        if(game.player1.smallBlind){
           // TODO: check if players have enough money  
           game.curPot += game.bigBlind;
           game.player2.money -= game.bigBlind;
@@ -260,6 +260,8 @@ pubnub.subscribe({
           game.currentCard = 0;
           game.deck = new Deck(1);
 
+          game.swapBlindsAndDealer();
+
           $(".opponent").html("");
 
           // Log action in chat
@@ -267,6 +269,18 @@ pubnub.subscribe({
           var $message = $('<span class="text" />').text(opponent + " folded").html();
           $line.append($message);
           $('#chat-output').append($line);
+
+          // DEAL NEW HAND
+          pubnub.publish({
+            channel: channel,
+            message: {
+              type: 'game',
+              payload: {
+                action: 'deal1',
+                uuid: gameid,
+              }
+            }
+          });
         }
         
       }
@@ -385,6 +399,7 @@ $('#fold').click(function(){
   game.currentCard = 0;
   game.deck = new Deck(1);
   // TODO: swap blinds and dealer chip
+  game.swapBlindsAndDealer();
 
   if(me == player1){
     game.showPlayer1();
@@ -402,6 +417,7 @@ $('#fold').click(function(){
   game.curPot = 0;
   game.currentPot();
   $(".opponent").html("");
+  $(".buttons").css("visibility", "hidden");
 
   // Log action in chat
   var $line = $('<li class="list-group-item"><strong>Game: </strong> </span>');

@@ -52,6 +52,15 @@ Game.prototype.showFlop = function(){
 		$(".cards").append("<img src='" + path + ".png'>" + " ");
 	}
 }
+Game.prototype.swapBlindsAndDealer = function(){
+	this.player1.dealer = !this.player1.dealer;
+	this.player1.smallBlind = !this.player1.smallBlind;
+	this.player1.bigBlind = !this.player1.bigBlind;
+
+	this.player2.dealer = !this.player2.dealer;
+	this.player2.smallBlind = !this.player2.smallBlind;
+	this.player2.bigBlind = !this.player2.bigBlind;
+}
 
 
 Game.prototype.showPlayer1 = function(){
